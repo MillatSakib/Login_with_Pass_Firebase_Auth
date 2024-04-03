@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -42,6 +43,11 @@ const Auth = () => {
     createUserWithEmailAndPassword(auth, email, pass)
       .then((result) => {
         console.log(result.user);
+        sendEmailVerification(result.user).then(() => {
+          const msg = "We sent mail to " + email;
+          alert(msg);
+          console.log(email);
+        });
         setRegisterSuccess("User created Successfully!");
       })
       .catch((error) => {
