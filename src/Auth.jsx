@@ -1,15 +1,27 @@
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import auth from "../firebase.config";
 
 const Auth = () => {
+  const emailRef = useRef("");
   const [registerError, setRegisterError] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState("");
   const [showPass, setShowPass] = useState(false);
+  const handleForgotPassword = () => {
+    const email = emailRef.current.value;
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert("We are sent a reset reset link on your mail. Please Check!!!");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const handleResister = (e) => {
     e.preventDefault();
     setRegisterError("");
@@ -67,6 +79,7 @@ const Auth = () => {
                 type="email"
                 name="email"
                 placeholder="Email Address"
+                ref={emailRef}
                 required
               ></input>
               <input
@@ -80,6 +93,12 @@ const Auth = () => {
                 type="submit"
                 className="btn btn-secondary mb-4 w-3/4"
                 value="Login"
+              />
+              <input
+                type="button"
+                onClick={handleForgotPassword}
+                className="btn btn-secondary mb-4 w-3/4"
+                value="Forgot Password"
               />
             </form>
           </div>
